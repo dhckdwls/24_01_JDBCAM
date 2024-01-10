@@ -220,6 +220,99 @@ public class App {
 
 			System.out.println(id + "번 글이 삭제되었습니다.");
 		}
+		// member 쪽으로 나중에 가르면 좋게
+		else if(cmd.startsWith("member join")) {
+			System.out.println("==회원가입==");
+			
+			List<Member> members = new ArrayList<>();
+			SecSql sql = new SecSql();
+
+			sql.append("SELECT *");
+			sql.append("FROM `member`");
+			
+			List<Map<String, Object>> memberListMap = DBUtil.selectRows(conn, sql);
+
+			for (Map<String, Object> memberMap : memberListMap) {
+				members.add(new Member(memberMap));
+			}
+			
+			
+			String loginId = "";
+			String loginPw = "";
+			String name = "";
+			
+			while(true) {
+				System.out.print("아이디 : ");
+				String loginId1 = sc.nextLine();
+				
+				if(loginId1.length() == 0) {
+					System.out.println("아이디를 반드시 입력해");
+					continue;
+				}
+				Member checkmember = null;
+				for (Member member : members) {
+					if(member.getLoginId().equals(loginId1)) {
+						checkmember = member;
+					}
+				}
+				
+				if (checkmember == null) {
+					loginId = loginId1;
+				}else {
+					System.out.println("중복된아이디");
+					continue;
+				}
+				
+				 
+				
+				System.out.print("비밀번호 : ");
+				String loginPw1 = sc.nextLine();
+				if(loginPw1.length() == 0) {
+					System.out.println("비밀번호를 반드시 입력");
+					continue;
+				}
+				
+				System.out.println("비밀번호를 다시한번 입력");
+				String loginPw2 = sc.nextLine();
+				
+				if(loginPw1.equals(loginPw2)) {
+					loginPw = loginPw1;
+				}else {
+					System.out.println("비밀번호가 서로 다릅니다");
+					continue;
+				}
+				
+				
+				
+				System.out.println("==필수 입력 정보==");
+				System.out.print("이름 : ");
+				String name1 = sc.nextLine();
+				if(name1.length() == 0) {
+					System.out.println("이름 정보를 다시 입력해주세요");
+					continue;
+				}
+				name = name1;
+				break;
+			}
+			
+			
+
+			sql = new SecSql();
+
+			sql.append("INSERT INTO `member`");
+			sql.append("SET regDate = NOW(),");
+			sql.append("updateDate = NOW(),");
+			sql.append("loginId = ?,", loginId);
+			sql.append("loginPw = ?,", loginPw);
+			sql.append("`name` = ?;", name);
+
+			int id = DBUtil.insert(conn, sql);
+
+			System.out.println("회원가입 완료");
+		}
+		
+		
+		
 
 		return 0;
 	}
