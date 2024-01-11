@@ -10,6 +10,7 @@ public class Article {
 	private LocalDateTime updateDate;
 	private String title;
 	private String body;
+	private String name;
 
 	public Article(int id, String title, String body) {
 		this.id = id;
@@ -31,6 +32,7 @@ public class Article {
 		this.updateDate = (LocalDateTime) articleMap.get("updateDate");
 		this.title = (String) articleMap.get("title");
 		this.body = (String) articleMap.get("body");
+		this.name = (String) articleMap.get("name");
 	}
 
 	public LocalDateTime getRegDate() {
@@ -62,7 +64,13 @@ public class Article {
 	public void setId(int id) {
 		this.id = id;
 	}
+	public String getName() {
+		return name;
+	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
 	public String getTitle() {
 		return title;
 	}

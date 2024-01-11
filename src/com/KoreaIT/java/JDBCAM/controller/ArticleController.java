@@ -26,8 +26,9 @@ public class ArticleController {
 		String title = Container.sc.nextLine();
 		System.out.print("내용 : ");
 		String body = Container.sc.nextLine();
+		String name = Container.session.loginedMember.getName();
 
-		int id = articleService.doWrite(title, body);
+		int id = articleService.doWrite(title, body, name);
 
 		System.out.println(id + "번 글이 생성되었습니다");
 
@@ -43,9 +44,9 @@ public class ArticleController {
 			return;
 		}
 
-		System.out.println("  번호  /   제목  ");
+		System.out.println("  번호  /   제목  /  작성자");
 		for (Article article : articles) {
-			System.out.printf("  %d     /   %s   \n", article.getId(), article.getTitle());
+			System.out.printf("  %d     /   %s   /   %s  \n", article.getId(), article.getTitle(),article.getName());
 		}
 	}
 
