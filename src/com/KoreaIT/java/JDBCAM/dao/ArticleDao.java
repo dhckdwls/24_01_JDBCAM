@@ -29,30 +29,27 @@ public class ArticleDao {
 		return DBUtil.insert(conn, sql);
 	}
 
-	public List<Article> showList() {
-		
-		List<Article> articles = new ArrayList<>();
+	public Map<String, Object> getArticleById(int id) {
 
 		SecSql sql = new SecSql();
 
 		sql.append("SELECT *");
 		sql.append("FROM article");
-		sql.append("ORDER BY id DESC;");
+		sql.append("WHERE id = ?;", id);
 
-		List<Map<String, Object>> articleListMap = DBUtil.selectRows(conn, sql);
-
-		for (Map<String, Object> articleMap : articleListMap) {
-			articles.add(new Article(articleMap));
-		}
-		
-		return articles;
-
-		
-		
+		return DBUtil.selectRow(conn, sql);
 	}
 
-	public  int doUpdate(int id, String title, String body) {
-		
+	public void doDelete(int id) {
+		SecSql sql = new SecSql();
+
+		sql.append("DELETE FROM article");
+		sql.append("WHERE id = ?;", id);
+
+		DBUtil.delete(conn, sql);
+	}
+
+	public void doUpdate(int id, String title, String body) {
 		SecSql sql = new SecSql();
 
 		sql.append("UPDATE article");
@@ -65,47 +62,25 @@ public class ArticleDao {
 		}
 		sql.append("WHERE id = ?;", id);
 
-		int number =DBUtil.update(conn, sql);
-		return number;
-		
+		DBUtil.update(conn, sql);
+
 	}
 
-	public Map<String, Object> foundArticle(int id) {
+	public List<Article> getArticles() {
 		SecSql sql = new SecSql();
 
 		sql.append("SELECT *");
 		sql.append("FROM article");
-		sql.append("WHERE id = ?;", id);
+		sql.append("ORDER BY id DESC;");
 
-		Map<String, Object> articleMap = DBUtil.selectRow(conn, sql);
-		
-		return articleMap;
-		
-		
-		
-	}
+		List<Map<String, Object>> articleListMap = DBUtil.selectRows(conn, sql);
 
-	public Map<String, Object> showDetail(int id) {
-		SecSql sql = new SecSql();
+		List<Article> articles = new ArrayList<>();
 
-		sql.append("SELECT *");
-		sql.append("FROM article");
-		sql.append("WHERE id = ?;", id);
-
-		Map<String, Object> articleMap = DBUtil.selectRow(conn, sql);
-		
-		return articleMap;
-		
-	}
-
-	public int doDelete(int id,Connection conn) {
-		SecSql sql = new SecSql();
-
-		sql.append("DELETE FROM article");
-		sql.append("WHERE id = ?;", id);
-
-		int number = DBUtil.delete(conn, sql);
-		return number;
+		for (Map<String, Object> articleMap : articleListMap) {
+			articles.add(new Article(articleMap));
+		}
+		return articles;
 	}
 
 }

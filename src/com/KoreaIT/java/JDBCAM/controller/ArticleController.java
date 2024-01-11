@@ -1,20 +1,17 @@
 package com.KoreaIT.java.JDBCAM.controller;
 
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 import com.KoreaIT.java.JDBCAM.Article;
 import com.KoreaIT.java.JDBCAM.service.ArticleService;
-import com.KoreaIT.java.JDBCAM.util.DBUtil;
-import com.KoreaIT.java.JDBCAM.util.SecSql;
 import com.KoreaIT.java.JDBCAM.util.Util;
 
 public class ArticleController {
-	Connection conn;
-	Scanner sc;
+	private Connection conn;
+	private Scanner sc;
 
 	private ArticleService articleService;
 
@@ -40,7 +37,7 @@ public class ArticleController {
 	public void showList() {
 		System.out.println("==목록==");
 
-		List<Article> articles = articleService.showList();
+		List<Article> articles = articleService.getArticles();
 
 		if (articles.size() == 0) {
 			System.out.println("게시글이 없습니다");
@@ -51,7 +48,6 @@ public class ArticleController {
 		for (Article article : articles) {
 			System.out.printf("  %d     /   %s   \n", article.getId(), article.getTitle());
 		}
-
 	}
 
 	public void doModify(String cmd) {
@@ -65,9 +61,9 @@ public class ArticleController {
 			return;
 		}
 
-		Map<String, Object> foundArticleMap = articleService.foundArticle(id);
+		Map<String, Object> articleMap = articleService.getArticleById(id);
 
-		if (foundArticleMap.isEmpty()) {
+		if (articleMap.isEmpty()) {
 			System.out.println(id + "번 글은 없습니다.");
 			return;
 		}
@@ -78,9 +74,9 @@ public class ArticleController {
 		System.out.println("새 내용 : ");
 		String body = sc.nextLine().trim();
 
-		int number = articleService.doUpdate(id, title, body);
+		articleService.doUpdate(id, title, body);
 
-		System.out.println(number + "번 글이 수정되었습니다.");
+		System.out.println(id + "번 글이 수정되었습니다.");
 
 	}
 
@@ -95,15 +91,16 @@ public class ArticleController {
 			return;
 		}
 
-		Map<String, Object> ArticleMap = articleService.showDetail(id);
+		System.out.println("==상세보기==");
 
-		if (ArticleMap.isEmpty()) {
+		Map<String, Object> articleMap = articleService.getArticleById(id);
+
+		if (articleMap.isEmpty()) {
 			System.out.println(id + "번 글은 없습니다.");
 			return;
 		}
-		System.out.println("==상세보기==");
 
-		Article article = new Article(ArticleMap);
+		Article article = new Article(articleMap);
 
 		System.out.println("번호 : " + article.getId());
 		System.out.println("작성날짜 : " + Util.getNowDate_TimeStr(article.getRegDate()));
@@ -123,16 +120,17 @@ public class ArticleController {
 			System.out.println("번호는 정수로 입력해");
 			return;
 		}
-		Map<String, Object> ArticleMap = articleService.foundArticle(id);
 
-		if (ArticleMap.isEmpty()) {
+		Map<String, Object> articleMap = articleService.getArticleById(id);
+
+		if (articleMap.isEmpty()) {
 			System.out.println(id + "번 글은 없습니다.");
 			return;
 		}
 
-		int number = articleService.doDelete(id, conn);
+		articleService.doDelete(id);
 
-		System.out.println(number + "번 글이 삭제되었습니다.");
+		System.out.println(id + "번 글이 삭제되었습니다.");
 
 	}
 }
