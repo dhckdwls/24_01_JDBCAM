@@ -5,23 +5,28 @@ import java.util.Map;
 
 public class Article {
 
+	public String getExtra__writer() {
+		return extra__writer;
+	}
+
+	public void setExtra__writer(String extra__writer) {
+		this.extra__writer = extra__writer;
+	}
+
 	private int id;
 	private LocalDateTime regDate;
 	private LocalDateTime updateDate;
+	private int memberId;
 	private String title;
 	private String body;
-	private String name;
 
-	public Article(int id, String title, String body) {
-		this.id = id;
-		this.title = title;
-		this.body = body;
-	}
+	private String extra__writer;
 
-	public Article(int id, LocalDateTime regDate, LocalDateTime updateDate, String title, String body) {
+	public Article(int id, LocalDateTime regDate, LocalDateTime updateDate, int memberId, String title, String body) {
 		this.id = id;
 		this.regDate = regDate;
 		this.updateDate = updateDate;
+		this.memberId = memberId;
 		this.title = title;
 		this.body = body;
 	}
@@ -30,9 +35,21 @@ public class Article {
 		this.id = (int) articleMap.get("id");
 		this.regDate = (LocalDateTime) articleMap.get("regDate");
 		this.updateDate = (LocalDateTime) articleMap.get("updateDate");
+		this.memberId = (int) articleMap.get("memberId");
 		this.title = (String) articleMap.get("title");
 		this.body = (String) articleMap.get("body");
-		this.name = (String) articleMap.get("name");
+
+		if (articleMap.get("extra__writer") != null) {
+			this.extra__writer = (String) articleMap.get("extra__writer");
+		}
+	}
+
+	public int getMemberId() {
+		return memberId;
+	}
+
+	public void setMemberId(int memberId) {
+		this.memberId = memberId;
 	}
 
 	public LocalDateTime getRegDate() {
@@ -53,8 +70,8 @@ public class Article {
 
 	@Override
 	public String toString() {
-		return "Article [id=" + id + ", regDate=" + regDate + ", updateDate=" + updateDate + ", title=" + title
-				+ ", body=" + body + "]";
+		return "Article [id=" + id + ", regDate=" + regDate + ", updateDate=" + updateDate + ", memberId=" + memberId
+				+ ", title=" + title + ", body=" + body + "]";
 	}
 
 	public int getId() {
@@ -64,13 +81,7 @@ public class Article {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getName() {
-		return name;
-	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
 	public String getTitle() {
 		return title;
 	}
